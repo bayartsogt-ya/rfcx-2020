@@ -5,6 +5,5 @@ torch
 scikit-learn
 tqdm
 catalyst
-fastprogress
 torchvision
 torchlibrosa

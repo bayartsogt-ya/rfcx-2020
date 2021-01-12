@@ -7,7 +7,7 @@ import torch
 import torch.optim as optim
 import torch.utils.data as data
 from catalyst.dl import CheckpointCallback, SupervisedRunner
-from fastprogress import progress_bar
+from tqdm import tqdm
 
 # local imports
 import src.models as local_models
@@ -134,7 +134,7 @@ def validate_fold(config, loader, device) -> pd.DataFrame:
     y_pred = []
     y_recording_ids = []
 
-    for batch in progress_bar(loader):
+    for batch in tqdm(loader):
         y_true.append(batch['targets'].numpy())
         y_recording_ids.extend(batch['recording_id'])
 
@@ -174,7 +174,7 @@ def predict(config, loader, device) -> pd.DataFrame:
     y_pred = []
     y_recording_ids = []
 
-    for batch in progress_bar(loader):
+    for batch in tqdm(loader):
         y_recording_ids.extend(batch['recording_id'])
 
         with torch.no_grad():
