@@ -47,9 +47,6 @@ class Config:
 def main():
 
     config = Config()
-    print(config)
-
-    raise Exception("stop")
 
     # Data Load
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
