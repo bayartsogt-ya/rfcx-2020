@@ -147,16 +147,16 @@ def validate_fold(config, loader, device) -> pd.DataFrame:
     y_true = np.concatenate(y_true, 0)
     y_pred = np.concatenate(y_pred, 0)
 
-    print("y_true.shape, y_pred.shape:", y_true.shape, y_pred.shape)
-    print("SCORE:", calculate_overall_lwlrap_sklearn(y_true,
-                                                     y_pred.max(axis=1)))
+    print("OOF SCORE:", calculate_overall_lwlrap_sklearn(y_true,
+                                                         y_pred.max(axis=1)))
 
     clear_memory(model)
 
     colnames = ["recording_id"] + [f"s{i}" for i in range(config.num_classes)]
     df_pred = pd.DataFrame(y_pred.max(axis=1), columns=colnames[1:])
     df_pred["recording_id"] = y_recording_ids
-    df_pred = df_pred[colnames]
+
+    df_pred = df_pred.groupby("recording_id")[colnames].mean().reset_index()
 
     df_pred.to_csv(os.path.join(config.output_dir,
                                 f"oof_{config.use_fold}.csv"), index=False)
@@ -190,7 +190,10 @@ def predict(config, loader, device) -> pd.DataFrame:
     colnames = ["recording_id"] + [f"s{i}" for i in range(config.num_classes)]
     df_pred = pd.DataFrame(y_pred.max(axis=1), columns=colnames[1:])
     df_pred["recording_id"] = y_recording_ids
-    df_pred = df_pred[colnames]
+
+    # group by recording_id and take a mean
+    df_pred = df_pred.groupby("recording_id")[colnames].mean().reset_index()
+
     df_pred.to_csv(os.path.join(config.output_dir,
                                 f"prediction_{config.use_fold}.csv"), index=False)
 
