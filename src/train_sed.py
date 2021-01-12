@@ -26,6 +26,8 @@ def main(config):
 
     train = pd.read_csv(config.train_csv_path)
     test = pd.read_csv(config.test_csv_path)
+
+    use_fold = config.use_fold
     train_fold = train.query("kfold != @use_fold")
     valid_fold = train.query("kfold == @use_fold")
 
