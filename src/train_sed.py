@@ -18,7 +18,7 @@ from src.helper_train import clear_memory, get_model
 from src.metrics import calculate_overall_lwlrap_sklearn
 
 
-def main(config):
+def train_valid_test(config):
 
     # Data Load
     print('Setup complete. Using torch %s %s' % (torch.__version__,
