@@ -132,10 +132,10 @@ def validate_fold(config, loader, device):
 
     for batch in progress_bar(loader):
         y_true.append(batch['targets'].numpy())
-        y_recording_ids.extend(batch['recording_id'].numpy().tolist())
+        y_recording_ids.extend(batch['recording_id'])
 
         with torch.no_grad():
-            prediction = model(batch['waveform'].cuda())
+            prediction = model(batch['waveform'].to(device))
             framewise_outputs =\
                 prediction["framewise_output"].detach().cpu().numpy()
             y_pred.append(framewise_outputs)
@@ -169,10 +169,10 @@ def predict(config, loader, device):
     y_recording_ids = []
 
     for batch in progress_bar(loader):
-        y_recording_ids.extend(batch['recording_id'].numpy().tolist())
+        y_recording_ids.extend(batch['recording_id'])
 
         with torch.no_grad():
-            prediction = model(batch['waveform'].cuda())
+            prediction = model(batch['waveform'].to(device))
             framewise_outputs = prediction["framewise_output"].detach(
             ).cpu().numpy()
             y_pred.append(framewise_outputs)
