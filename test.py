@@ -6,8 +6,7 @@ if __name__ == "__main__":
 
     # Arguments:
     class Config:
-        root = "/Users/bayartsogtyadamsuren" + \
-            "/Projects/kaggle/rfcx-2020/data/sample_data"
+        root = "./rfcx-2020/data/sample_data"
         train_csv_path = os.path.join(root, "train_tp.csv")
         test_csv_path = os.path.join(root, "test.csv")
         train_period = 10
