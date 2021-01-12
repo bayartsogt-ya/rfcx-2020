@@ -7,6 +7,7 @@ if __name__ == "__main__":
     # Arguments:
     class Config:
         root = "./data/sample_data"
+        output_dir = "./output"
         train_csv_path = os.path.join(root, "train_tp.csv")
         test_csv_path = os.path.join(root, "test.csv")
         train_period = 10
@@ -29,4 +30,4 @@ if __name__ == "__main__":
             "apply_aug": True,
         }
 
-    main(Config)
+    oof, pred = main(Config)
