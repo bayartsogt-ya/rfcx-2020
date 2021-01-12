@@ -92,13 +92,16 @@ class PANNsDense121Att(nn.Module):
             x = do_mixup(x, mixup_lambda)
         return x, frames_num
 
-    def forward(self, input_data):
-        input_x, mixup_lambda = input_data
+    def forward(self, input_data, mixup_lambda=None):
         """
         Input: (batch_size, data_length)"""
-        b, c, s = input_x.shape
-        input_x = input_x.reshape(b * c, s)
-        x, frames_num = self.preprocess(input_x, mixup_lambda=mixup_lambda)
+        # input_x, mixup_lambda = input_data
+        # b, c, s = input_x.shape
+        # input_x = input_x.reshape(b * c, s)
+        b, s = input_data.shape
+        c = 1
+        # x, frames_num = self.preprocess(input_x, mixup_lambda=mixup_lambda)
+        x, frames_num = self.preprocess(input_data, mixup_lambda=mixup_lambda)
         if mixup_lambda is not None:
             b = (b * c) // 2
             c = 1
