@@ -21,6 +21,9 @@ from src.metrics import calculate_overall_lwlrap_sklearn
 def main(config):
 
     # Data Load
+    print('Setup complete. Using torch %s %s' % (torch.__version__,
+                                                 torch.cuda.get_device_properties(0) if torch.cuda.is_available() else 'CPU'))
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("DEVICE: ", device)
 
@@ -69,7 +72,7 @@ def main(config):
                                   shuffle=False,
                                   num_workers=2,
                                   pin_memory=True,
-                                  drop_last=False),
+                                  drop_last=False)
 
     model = getattr(local_models, config.model_name)(**config.model_config)
     model.to(device)
@@ -109,7 +112,7 @@ def main(config):
         scheduler=scheduler,
         num_epochs=config.num_epochs,
         verbose=True,
-        logdir=f"fold{config.use_fold}",
+        logdir=os.path.join(config.output_dir, f"fold{config.use_fold}"),
         callbacks=callbacks,
         main_metric="epoch_LWLRAP",
         minimize_metric=False)
@@ -120,8 +123,9 @@ def main(config):
     return oof, pred
 
 
-def validate_fold(config, loader, device):
-    weights_path = f"fold{config.use_fold}/checkpoints/best.pth"
+def validate_fold(config, loader, device) -> pd.DataFrame:
+    weights_path = os.path.join(
+        config.output_dir, f"fold{config.use_fold}/checkpoints/best.pth")
     model = get_model(config.model_name, config.model_config,
                       weights_path, device)
 
@@ -154,13 +158,15 @@ def validate_fold(config, loader, device):
     df_pred["recording_id"] = y_recording_ids
     df_pred = df_pred[colnames]
 
-    df_pred.to_csv("oof_{config.use_fold}.csv", index=False)
+    df_pred.to_csv(os.path.join(config.output_dir,
+                                f"oof_{config.use_fold}.csv"), index=False)
 
     return df_pred
 
 
-def predict(config, loader, device):
-    weights_path = f"fold{config.use_fold}/checkpoints/best.pth"
+def predict(config, loader, device) -> pd.DataFrame:
+    weights_path = os.path.join(
+        config.output_dir, f"fold{config.use_fold}/checkpoints/best.pth")
     model = get_model(config.model_name, config.model_config,
                       weights_path, device)
 
@@ -173,8 +179,8 @@ def predict(config, loader, device):
 
         with torch.no_grad():
             prediction = model(batch['waveform'].to(device))
-            framewise_outputs = prediction["framewise_output"].detach(
-            ).cpu().numpy()
+            framewise_outputs =\
+                prediction["framewise_output"].detach().cpu().numpy()
             y_pred.append(framewise_outputs)
 
     y_pred = np.concatenate(y_pred, 0)
@@ -185,6 +191,7 @@ def predict(config, loader, device):
     df_pred = pd.DataFrame(y_pred.max(axis=1), columns=colnames[1:])
     df_pred["recording_id"] = y_recording_ids
     df_pred = df_pred[colnames]
-    df_pred.to_csv("prediction_{config.use_fold}.csv", index=False)
+    df_pred.to_csv(os.path.join(config.output_dir,
+                                f"prediction_{config.use_fold}.csv"), index=False)
 
     return df_pred
