@@ -28,6 +28,8 @@ def main(config):
     test = pd.read_csv(config.test_csv_path)
 
     use_fold = config.use_fold
+    print("CURRENT FOLD:", use_fold)
+
     train_fold = train.query("kfold != @use_fold").reset_index(drop=True)
     valid_fold = train.query("kfold == @use_fold").reset_index(drop=True)
 
@@ -112,8 +114,8 @@ def main(config):
         main_metric="epoch_LWLRAP",
         minimize_metric=False)
 
-    oof = validate_fold(config, loaders["valid"])
-    pred = predict(config, test_loader)
+    oof = validate_fold(config, loaders["valid"], device)
+    pred = predict(config, test_loader, device)
 
     return oof, pred
 
