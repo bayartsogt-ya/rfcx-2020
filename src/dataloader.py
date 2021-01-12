@@ -23,7 +23,6 @@ class PANNsDataset(Dataset):
         if not is_train:
             df = self.create_test_df(df)
 
-        print(df)
         self.df = df
 
     def __len__(self):
