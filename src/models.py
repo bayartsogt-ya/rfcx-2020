@@ -129,13 +129,18 @@ class PANNsDense121Att(nn.Module):
         framewise_output = interpolate(segmentwise_output,
                                        self.interpolate_ratio)
         framewise_output = pad_framewise_output(framewise_output, frames_num)
-        frame_shape = framewise_output.shape
-        clip_shape = clipwise_output.shape
+        # frame_shape = framewise_output.shape
+        # clip_shape = clipwise_output.shape
+        # output_dict = {
+        #     'framewise_output': framewise_output.reshape(
+        #         b, c, frame_shape[1], frame_shape[2]),
+        #     'clipwise_output': clipwise_output.reshape(
+        #         b, c, clip_shape[1]),
+        # }
+
         output_dict = {
-            'framewise_output': framewise_output.reshape(
-                b, c, frame_shape[1], frame_shape[2]),
-            'clipwise_output': clipwise_output.reshape(
-                b, c, clip_shape[1]),
+            'framewise_output': framewise_output,
+            'clipwise_output': clipwise_output,
         }
 
         return output_dict

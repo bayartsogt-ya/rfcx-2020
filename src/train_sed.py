@@ -28,8 +28,8 @@ def main(config):
     test = pd.read_csv(config.test_csv_path)
 
     use_fold = config.use_fold
-    train_fold = train.query("kfold != @use_fold")
-    valid_fold = train.query("kfold == @use_fold")
+    train_fold = train.query("kfold != @use_fold").reset_index(drop=True)
+    valid_fold = train.query("kfold == @use_fold").reset_index(drop=True)
 
     # loaders
     loaders = {
@@ -118,9 +118,10 @@ def main(config):
     return oof, pred
 
 
-def validate_fold(config, loader):
+def validate_fold(config, loader, device):
     weights_path = f"fold{config.use_fold}/checkpoints/best.pth"
-    model = get_model(config.model_config, weights_path)
+    model = get_model(config.model_name, config.model_config,
+                      weights_path, device)
 
     # Validation
     y_true = []
@@ -156,9 +157,10 @@ def validate_fold(config, loader):
     return df_pred
 
 
-def predict(config, loader):
+def predict(config, loader, device):
     weights_path = f"fold{config.use_fold}/checkpoints/best.pth"
-    model = get_model(config.model_config, weights_path)
+    model = get_model(config.model_name, config.model_config,
+                      weights_path, device)
 
     # Validation
     y_pred = []

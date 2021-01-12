@@ -3,7 +3,7 @@ from src.train_sed import main
 
 
 if __name__ == "__main__":
-    
+
     # Arguments:
     class Config:
         root = "/Users/bayartsogtyadamsuren" + \
@@ -26,7 +26,8 @@ if __name__ == "__main__":
             "mel_bins": 64,
             "fmin": 50,
             "fmax": 14000,
-            "classes_num": 527,
+            "classes_num": num_classes,
+            "apply_aug": True,
         }
 
     main(Config)
