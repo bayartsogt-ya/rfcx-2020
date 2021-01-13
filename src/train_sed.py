@@ -93,7 +93,7 @@ def train_valid_test(config):
         F1Callback(prefix="f1"),
         mAPCallback(prefix="mAP"),
         LWLRAPCallback(prefix="LWLRAP"),
-        CheckpointCallback(save_n_best=0)
+        CheckpointCallback(save_n_best=2)
     ]
 
     # Train
