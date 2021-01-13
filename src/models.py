@@ -122,6 +122,7 @@ class PANNsDense121Att(nn.Module):
         x = F.dropout(x, p=0.5, training=self.training)
 
         (clipwise_output, norm_att, segmentwise_output) = self.att_block(x)
+        logit = torch.sum(norm_att * self.att_block.cla(x), dim=2)
         segmentwise_output = segmentwise_output.transpose(1, 2)
 
         # Get framewise output
@@ -140,6 +141,7 @@ class PANNsDense121Att(nn.Module):
         output_dict = {
             'framewise_output': framewise_output,
             'clipwise_output': clipwise_output,
+            'logit': logit,
         }
 
         return output_dict
