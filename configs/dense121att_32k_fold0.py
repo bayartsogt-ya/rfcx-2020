@@ -8,7 +8,7 @@ import os
 class Config:
     root = "./data/rfcx-species-audio-detection-sr-32k"
     output_dir = "./output"
-    train_csv_path = os.path.join(root, "train_tp.csv")
+    train_csv_path = os.path.join(root, "train_folds.csv")
     test_csv_path = os.path.join(root, "test.csv")
     train_period = 10
     test_period = 30
