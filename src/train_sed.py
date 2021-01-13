@@ -80,9 +80,9 @@ def train_valid_test(config):
     print("Training...")
 
     # Optimizer
-    # optimizer = optim.Adam(model.parameters(), lr=0.001)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, betas=(
-        0.9, 0.999), eps=1e-08, weight_decay=1e-5, amsgrad=True)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    # optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, betas=(
+    #     0.9, 0.999), eps=1e-08, weight_decay=1e-5, amsgrad=True)
 
     # Scheduler
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
