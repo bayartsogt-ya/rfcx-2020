@@ -12,7 +12,7 @@ from tqdm import tqdm
 # local imports
 import src.models as local_models
 from src.callbacks import F1Callback, LWLRAPCallback, mAPCallback
-from src.criterian import PANNsLoss
+from src.criterian import PANNsLoss, FocalLoss
 from src.dataloader import PANNsDataset
 from src.helper_train import clear_memory, get_model
 from src.metrics import calculate_overall_lwlrap_sklearn
@@ -80,20 +80,23 @@ def train_valid_test(config):
     print("Training...")
 
     # Optimizer
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    # optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, betas=(
+        0.9, 0.999), eps=1e-08, weight_decay=1e-5, amsgrad=True)
 
     # Scheduler
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 
     # Loss
-    criterion = PANNsLoss().to(device)
+    # criterion = PANNsLoss().to(device)
+    criterion = FocalLoss().to(device)
 
     # callbacks
     callbacks = [
         F1Callback(prefix="f1"),
         mAPCallback(prefix="mAP"),
         LWLRAPCallback(prefix="LWLRAP"),
-        CheckpointCallback(save_n_best=2)
+        CheckpointCallback(save_n_best=1)
     ]
 
     # Train
