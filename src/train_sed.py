@@ -12,7 +12,7 @@ from tqdm import tqdm
 # local imports
 import src.models as local_models
 from src.callbacks import F1Callback, LWLRAPCallback, mAPCallback
-from src.criterian import PANNsLoss, FocalLoss
+from src.criterian import PANNsLoss, FocalLoss, ImprovedPANNsLoss, ImprovedFocalLoss
 from src.dataloader import PANNsDataset
 from src.helper_train import clear_memory, get_model
 from src.metrics import calculate_overall_lwlrap_sklearn
@@ -89,7 +89,7 @@ def train_valid_test(config):
 
     # Loss
     # criterion = PANNsLoss().to(device)
-    criterion = FocalLoss().to(device)
+    criterion = ImprovedPANNsLoss().to(device)
 
     # callbacks
     callbacks = [
