@@ -12,8 +12,12 @@ class Config:
     test_csv_path = os.path.join(root, "test.csv")
     train_period = 10
     test_period = 30
+
     num_epochs = 1
     batch_size = 2
+    lr = 1e-2
+    eta_min = 1e-4  # min learning rate
+
     transforms = []
     use_fold = 0
     num_classes = 24

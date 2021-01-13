@@ -14,6 +14,9 @@ class Config:
     test_period = 30
     num_epochs = 20
     batch_size = 64
+    lr = 1e-2
+    eta_min = 1e-4  # min learning rate
+
     transforms = []
     use_fold = 0
     num_classes = 24
